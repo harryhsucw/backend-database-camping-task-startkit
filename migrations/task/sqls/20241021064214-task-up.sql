@@ -13,7 +13,7 @@
 --     3. 用戶名稱為`肌肉棒子`，Email 為`muscle@hexschooltest.io`，Role為`USER`
 --     4. 用戶名稱為`好野人`，Email 為`richman@hexschooltest.io`，Role為`USER`
 --     5. 用戶名稱為`Q太郎`，Email 為`starplatinum@hexschooltest.io`，Role為`USER`
---     6. 用戶名稱為 透明人，Email 為 opacity0@hexschooltest.io，Role 為 USER
+--     6. 用戶名稱為 透明人，Email 為 `opacity0@hexschooltest.io`，Role 為 USER
 insert into "USER" (name, email, role) values
 ('李燕容', 'lee2000@hexschooltest.io', 'USER'),
 ('王小明', 'wXlTq@hexschooltest.io', 'USER'),
@@ -37,7 +37,7 @@ where email = 'starplatinum@hexschooltest.io';
 
 -- 1-3 刪除：刪除USER 資料表中，用 Email 找到透明人，並刪除該筆資料
 delete from "USER"
-where email = 'opcatiy0@hexschooltest.io';
+where email = 'opacity0@hexschooltest.io';
 
 -- 1-4 查詢：取得USER 資料表目前所有用戶數量（提示：使用count函式)
 SELECT COUNT(*) AS 用戶數量 
@@ -57,7 +57,7 @@ SELECT * FROM "USER" limit 3;
     -- 1. 名稱為 `7 堂組合包方案`，價格為`1,400` 元，堂數為`7`
     -- 2. 名稱為`14 堂組合包方案`，價格為`2,520` 元，堂數為`14`
     -- 3. 名稱為 `21 堂組合包方案`，價格為`4,800` 元，堂數為`21`
-*insert into "CREDIT_PACKAGE" (name, credit_amount, price) values
+insert into "CREDIT_PACKAGE" (name, credit_amount, price) values
 ('7 堂組合包方案',7, 1400 ),
 ('14 堂組合包方案',14, 2520),
 ('21 堂組合包方案',21, 4800);
@@ -66,7 +66,7 @@ SELECT * FROM "USER" limit 3;
     -- 1. `王小明` 購買 `14 堂組合包方案`
     -- 2. `王小明` 購買 `21 堂組合包方案`
     -- 3. `好野人` 購買 `14 堂組合包方案`
-*INSERT INTO "CREDIT_PURCHASE" (user_id, credit_package_id, purchased_credits, price_paid) 
+INSERT INTO "CREDIT_PURCHASE" (user_id, credit_package_id, purchased_credits, price_paid) 
 VALUES(
 	(SELECT id FROM "USER" WHERE name = '王小明'), 
 	(SELECT id FROM "CREDIT_PACKAGE" WHERE name = '14 堂組合包方案'),
@@ -106,6 +106,7 @@ insert into "COACH" (user_id, experience_years) values
     -- 1. 所有教練都有 `重訓` 專長
     -- 2. 教練`肌肉棒子` 需要有 `瑜伽` 專長
     -- 3. 教練`Q太郎` 需要有 `有氧運動` 與 `復健訓練` 專長
+insert into "COACH_LINK_SKILL" (coach_id, skill_id)values
 (
 	(
 	select id 
@@ -355,7 +356,7 @@ limit 1;
 -- 顯示須包含以下欄位： 組合包方案名稱, 銷售數量
 SELECT
 	"CREDIT_PACKAGE".name AS 組合包方案名稱,
-	COUNT("CREDIT_PURCHASE") AS 銷售數量
+	COUNT("CREDIT_PURCHASE".credit_package_id) AS 銷售數量
 FROM "CREDIT_PACKAGE"
 INNER JOIN "CREDIT_PURCHASE" ON "CREDIT_PURCHASE".credit_package_id = "CREDIT_PACKAGE".id
 group by "CREDIT_PACKAGE".name;
@@ -364,7 +365,7 @@ group by "CREDIT_PACKAGE".name;
 -- 顯示須包含以下欄位： 總營收
 select SUM("CREDIT_PURCHASE".price_paid) AS 總營收
 FROM "CREDIT_PURCHASE"
-where created_at between '2024-11-01 00:00:00' and '2024-11-30 23:59:59';
+where purchase_at between '2024-11-01 00:00:00' and '2024-11-30 23:59:59';
 
 -- 6-5. 查詢：計算 11 月份有預約課程的會員人數（需使用 Distinct，並用 created_at 和 status 欄位統計）
 -- 顯示須包含以下欄位： 預約會員人數
